@@ -1,0 +1,19 @@
+{
+ "display_name": "Gurobi (Python 2)",
+ "language": "python",
+ "codemirror_mode": {
+  "version": 3,
+  "name": "ipython"
+ },
+ "env": {
+  "GRB_LICENSE_FILE": "/home/cavani/puc/gurobikey-puc2015/gurobi.lic",
+  "LD_LIBRARY_PATH": "/home/cavani/puc/gurobi563/linux64/lib"
+ },
+ "argv": [
+  "/home/cavani/puc/inf2912/Trabalho/gurobi/bin/python",
+  "-c",
+  "from IPython.kernel.zmq.kernelapp import main; main()",
+  "-f",
+  "{connection_file}"
+ ]
+}
