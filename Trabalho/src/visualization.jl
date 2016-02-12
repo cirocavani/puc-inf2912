@@ -103,17 +103,17 @@ function plotslot_multi(dataset)
     hstack(g...)
 end
 
-matrix(data) = float(hcat(map(first, data)...))
+vector_matrix(data) = float(hcat(map(first, data)...))
 
 function plotpca(dataset)
-    train = matrix(dataset.data)
+    train = vector_matrix(dataset.data)
     model = fit(PCA, train; maxoutdim=2)
 
     g = Array(Layer, 0)
 
     for k=1:dataset.groups
         kdata = data(dataset, k)
-        kpoints = transform(model, matrix(kdata))
+        kpoints = transform(model, vector_matrix(kdata))
         x = vec(kpoints[1,:])
         y = vec(kpoints[2,:])
         color = fill(string(k), size(kpoints, 2))
