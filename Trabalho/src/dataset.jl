@@ -18,8 +18,8 @@ function group_size(g, n, n_min, n_max)
         num_g[i] = round(Int, num_g[i] * correct)
         sum += num_g[i]
     end
-    if sum < n
-        num_g[g] += 1
+    if sum != n
+        num_g[g] += n - sum
     end
     num_g
 end
@@ -89,10 +89,10 @@ type Dataset
         end
 
         if size_max == 0
-            size_max = 2 * round(Int, size / groups)
+            size_max = round(Int, 1.2 * size / groups)
         end
         if size_min == 0
-            size_min = round(Int, size_max / 10)
+            size_min = round(Int, size_max / 2)
         end
         if size_max * groups < size
             error("size_max too tight")

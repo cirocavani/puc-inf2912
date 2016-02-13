@@ -141,3 +141,10 @@ function evaluation_summary(io::IO, dataset, prediction; verbose=false)
 end
 
 evaluation_summary(dataset, prediction; verbose=false) = evaluation_summary(STDOUT, dataset, prediction; verbose=verbose)
+
+function test_dataset(dataset_name, predictor; output=STDOUT)
+    dataset = load_dataset(dataset_name)
+    k = dataset.groups
+    @time prediction = predictor(dataset, k)
+    evaluation_summary(dataset, prediction; verbose=true)
+end

@@ -2,6 +2,7 @@ include("dataset.jl")
 
 export pcenter, pcenter_approx
 
+"Algoritmo de clusterização P-Center (algoritmo Farthest-first traversal)."
 function pcenter(dataset, k)
     data = map(first, dataset.data)
 
@@ -27,6 +28,8 @@ function pcenter(dataset, k)
     assignments
 end
 
+"Algoritmo de clusterização P-Center (algoritmo Farthest-first traversal) \
+aproximado para os grupos pré-definidos do dataset."
 function pcenter_approx(dataset, k)
     assignments = pcenter(dataset, k)
     centermap = mapping(dataset, assignments, k)
