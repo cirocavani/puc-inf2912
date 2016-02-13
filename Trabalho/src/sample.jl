@@ -13,10 +13,10 @@ dataset_small() = Dataset(groups=3, size=1000, features=200, slot=40)
 
 dataset_large() = Dataset(groups=3, size=10000, features=200, slot=40)
 
-function create_small_dataset()
+function save_small_dataset()
     export_dataset("small", dataset_small())
 end
 
-function create_large_dataset()
+function save_large_dataset()
     export_dataset("large", dataset_large())
 end

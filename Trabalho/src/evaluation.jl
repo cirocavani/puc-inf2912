@@ -106,25 +106,25 @@ function Evaluation(dataset, prediction)
 end
 
 function Base.show(io::IO, s::SampleEvaluation)
-    println(io, "Tamanho: ", s.size)
-    println(io, "Acertos: ", s.correct)
-    println(io, "Erros: ", s.mistakes)
+    println(io, "Size: ", s.size)
+    println(io, "Correct: ", s.correct)
+    println(io, "Mistakes: ", s.mistakes)
     println(io, "Accuracy: ", round(100 * s.accuracy, 2), "%")
 end
 
 function Base.show(io::IO, c::ClusterEvaluation)
     println(io, "Cluster ", c.cluster)
     println(io)
-    println(io, "Tamanho: ", c.size)
+    println(io, "Size: ", c.size)
     println(io, "Accuracy: ", round(100 * c.accuracy, 2), "%")
     println(io, "Precision: ", round(100 * c.precision, 2), "%")
     println(io, "Recall: ", round(100 * c.recall, 2), "%")
     println(io, "F-score: ", round(c.fscore , 2))
     println(io)
-    println(io, "Acerto positivo: ", c.truePositive, " (", round(100 * c.truePositiveShare, 2), "%)")
-    println(io, "Acerto negativo: ", c.trueNegative, " (", round(100 * c.trueNegativeShare, 2), "%)")
-    println(io, "Falso negativo: ", c.falseNegative, " (", round(100 * c.falseNegativeShare, 2), "%)")
-    println(io, "Falso positivo: ", c.falsePositive, " (", round(100 * c.falsePositiveShare, 2), "%)")
+    println(io, "True Positive: ", c.truePositive, " (", round(100 * c.truePositiveShare, 2), "%)")
+    println(io, "True Negative: ", c.trueNegative, " (", round(100 * c.trueNegativeShare, 2), "%)")
+    println(io, "False Negative: ", c.falseNegative, " (", round(100 * c.falseNegativeShare, 2), "%)")
+    println(io, "False Positive: ", c.falsePositive, " (", round(100 * c.falsePositiveShare, 2), "%)")
 end
 
 function Base.show(io::IO, r::Evaluation)
@@ -136,7 +136,7 @@ end
 
 function evaluation_summary(io::IO, dataset, prediction; verbose=false)
     r = Evaluation(dataset, prediction)
-    verbose && println(io, "Matriz de Confusão:\n\n", r.matrix, "\n")
+    verbose && println(io, "Confusion Matrix:\n\n", r.matrix, "\n")
     print(io, r)
 end
 

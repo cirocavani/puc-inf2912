@@ -47,13 +47,13 @@ include("../src/clustering.jl")
 const Clustering = Inf2912Clustering
 
 println("Creating Datasets...")
-import Clustering.create_large_dataset, Clustering.create_small_dataset
+import Clustering.save_large_dataset, Clustering.save_small_dataset
 
 cd("notebook")
 
 println("Large")
-@time Clustering.create_large_dataset()
+@time Clustering.save_large_dataset()
 println("Small")
-@time Clustering.create_small_dataset()
+@time Clustering.save_small_dataset()
 
 println("Creating Datasets done.")

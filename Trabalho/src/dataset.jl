@@ -135,5 +135,5 @@ function dist(dataset)
         d[i,j] = dist
         d[j,i] = dist
     end
-    d
+    Symmetric(d)
 end
