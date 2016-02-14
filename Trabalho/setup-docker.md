@@ -81,4 +81,4 @@ Acesso do Container no Host.
     (...)
     > 172.17.0.2	inf2912
 
-Abra o Navegador no <IP>:8888 para acessar o Jupyter.
+Abra o Navegador no `<IP_DO_CONTAINER>:8888` para acessar o Jupyter.
