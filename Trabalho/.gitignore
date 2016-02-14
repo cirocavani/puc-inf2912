@@ -1,3 +1,4 @@
 gurobi/
 gurobi.log
 dataset/*/
+docker-image.tar
