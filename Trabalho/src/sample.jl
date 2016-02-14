@@ -7,11 +7,11 @@ export dataset_tiny,
     create_small_dataset,
     create_large_dataset
 
-dataset_tiny() = Dataset(size=100, groups=3, features=16, slot=3)
+dataset_tiny() = Dataset(size=100, clusters=3, dimension=16, slot=3)
 
-dataset_small() = Dataset(groups=3, size=1000, features=200, slot=40)
+dataset_small() = Dataset(size=1000, clusters=3, dimension=200, slot=40)
 
-dataset_large() = Dataset(groups=3, size=10000, features=200, slot=40)
+dataset_large() = Dataset(size=10000, clusters=3, dimension=200, slot=40)
 
 function save_small_dataset()
     export_dataset("small", dataset_small())

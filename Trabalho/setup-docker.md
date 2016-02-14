@@ -26,6 +26,13 @@ Criação do container Docker com Ubuntu (o diretório local será montado na pa
 >
 >   docker run -i -t --name=inf2912 --hostname=inf2912 ubuntu:14.04 /bin/bash
 
+Configuração do Locale.
+
+    echo 'LANG="en_US.UTF-8"' >> /etc/environment
+    echo 'LC_ALL="en_US.UTF-8"' >> /etc/environment
+    locale-gen en_US.UTF-8
+    dpkg-reconfigure locales
+
 Configuração do Usuário da Aplicação (sem senha).
 
     useradd -m -d /clustering -G sudo clustering

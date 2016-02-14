@@ -3,14 +3,14 @@ include("dataset.jl")
 export random_clustering
 
 function distribution(dataset)
-    groups = Array(Float64, dataset.groups)
+    clusters = Array(Float64, dataset.clusters)
     size = 0
-    for k=1:dataset.groups
+    for k=1:dataset.clusters
         size += count(dataset, k)
-        groups[k] = size
+        clusters[k] = size
     end
-    groups /= size
-    groups
+    clusters /= size
+    clusters
 end
 
 function choosek(distribution)
@@ -25,7 +25,7 @@ end
 
 function random_clustering(dataset)
     cdf = distribution(dataset)
-    clusters = Array(Int, length(dataset.data))
+    clusters = Array(Int, dataset.size)
     for i=1:length(clusters)
         clusters[i] = choosek(cdf)
     end

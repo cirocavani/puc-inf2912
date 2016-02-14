@@ -9,7 +9,6 @@ export
 
 using Gadfly, MultivariateStats
 
-
 function halfmask(n)
     mask = zeros(n)
     middle = round(Int, n / 2)
@@ -26,20 +25,20 @@ function halfmasks(n)
 end
 
 function reduce2d(data, masks)
-    x = map(t -> norm(masks[1] .* t[1]), data)
-    y = map(t -> norm(masks[2] .* t[1]), data)
-    k = map(t -> string(t[2]), data)
-    x, y, k
+    x = map(v -> norm(masks[1] .* v), data)
+    y = map(v -> norm(masks[2] .* v), data)
+    x, y
 end
 
 function plothalf(dataset)
-    masks = halfmasks(dataset.features)
+    masks = halfmasks(dataset.dimension)
 
     g = Array(Layer, 0)
 
-    for k=1:dataset.groups
+    for k=1:dataset.clusters
         kdata = data(dataset, k)
-        x, y, color = reduce2d(kdata, masks)
+        x, y = reduce2d(kdata, masks)
+        color = fill(string(k), length(kdata))
         push!(g, layer(x=x, y=y, color=color, Geom.point)...)
     end
 
@@ -47,13 +46,13 @@ function plothalf(dataset)
 end
 
 function plothalf_multi(dataset)
-    masks = halfmasks(dataset.features)
+    masks = halfmasks(dataset.dimension)
 
     g = Array(Plot, 0)
 
-    for k=1:dataset.groups
+    for k=1:dataset.clusters
         kdata = data(dataset, k)
-        x, y, _ = reduce2d(kdata, masks)
+        x, y = reduce2d(kdata, masks)
         p = plot(x=x, y=y, Scale.x_continuous(minvalue=0, maxvalue=10), Scale.y_continuous(minvalue=0, maxvalue=10))
         push!(g, p)
 
@@ -79,10 +78,11 @@ end
 function plotslot(dataset)
     g = Array(Layer, 0)
 
-    for k=1:dataset.groups
-        masks = featuremasks(dataset.features, dataset.slot, k)
+    for k=1:dataset.clusters
+        masks = featuremasks(dataset.dimension, dataset.slot, k)
         kdata = data(dataset, k)
-        x, y, color = reduce2d(kdata, masks)
+        x, y = reduce2d(kdata, masks)
+        color = fill(string(k), length(kdata))
         push!(g, layer(x=x, y=y, color=color, Geom.point)...)
     end
 
@@ -92,10 +92,10 @@ end
 function plotslot_multi(dataset)
     g = Array(Plot, 0)
 
-    for k=1:dataset.groups
-        masks = featuremasks(dataset.features, dataset.slot, k)
+    for k=1:dataset.clusters
+        masks = featuremasks(dataset.dimension, dataset.slot, k)
         kdata = data(dataset, k)
-        x, y, _ = reduce2d(kdata, masks)
+        x, y = reduce2d(kdata, masks)
         p = plot(x=x, y=y, Scale.x_continuous(minvalue=0, maxvalue=10), Scale.y_continuous(minvalue=0, maxvalue=10))
         push!(g, p)
     end
@@ -103,15 +103,13 @@ function plotslot_multi(dataset)
     hstack(g...)
 end
 
-vector_matrix(data) = float(hcat(map(first, data)...))
-
 function plotpca(dataset)
-    train = vector_matrix(dataset.data)
+    train = vector_matrix(dataset.input.data)
     model = fit(PCA, train; maxoutdim=2)
 
     g = Array(Layer, 0)
 
-    for k=1:dataset.groups
+    for k=1:dataset.clusters
         kdata = data(dataset, k)
         kpoints = transform(model, vector_matrix(kdata))
         x = vec(kpoints[1,:])

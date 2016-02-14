@@ -7,12 +7,11 @@ export SampleEvaluation,
   confusion_matrix,
   evaluation_summary
 
-function mapping(dataset, assignments, k)
+function mapping(dataset::Dataset, assignments::Vector{Int}, k::Int)
     centermap = zeros(Int, k)
-    groups = map(v -> v[2], dataset.data)
-    for i=1:dataset.groups
-        g_index = findin(groups, i)
-        centers = map(i -> assignments[i], g_index)
+    for i=1:dataset.clusters
+        k_index = findin(dataset.target, i)
+        centers = map(i -> assignments[i], k_index)
         counts = hist(centers, 0:k)[2]
         center_key = indmax(counts)
         if centermap[center_key] != 0
@@ -24,9 +23,9 @@ function mapping(dataset, assignments, k)
 end
 
 function confusion_matrix(dataset, prediction)
-    matrix = zeros(Int, dataset.groups, dataset.groups)
+    matrix = zeros(Int, dataset.clusters, dataset.clusters)
     for p=1:length(prediction)
-        i = dataset.data[p][2]
+        i = dataset.target[p]
         j = prediction[p]
         matrix[i,j] += 1
     end
@@ -101,7 +100,7 @@ end
 function Evaluation(dataset, prediction)
     matrix = confusion_matrix(dataset, prediction)
     s = SampleEvaluation(matrix)
-    c = map(k -> ClusterEvaluation(matrix, s, k), 1:dataset.groups)
+    c = map(k -> ClusterEvaluation(matrix, s, k), 1:dataset.clusters)
     Evaluation(matrix, s, c)
 end
 
@@ -144,7 +143,7 @@ evaluation_summary(dataset, prediction; verbose=false) = evaluation_summary(STDO
 
 function test_dataset(dataset_name, predictor; output=STDOUT)
     dataset = load_dataset(dataset_name)
-    k = dataset.groups
+    k = dataset.clusters
     @time prediction = predictor(dataset, k)
     evaluation_summary(dataset, prediction; verbose=true)
 end

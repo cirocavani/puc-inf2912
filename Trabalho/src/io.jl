@@ -36,13 +36,3 @@ function load_dataset(name; datasetdir=default_datasetdir)
     path = datasetdir * "/" * name
     load(path * "/dataset.jld", "dataset")
 end
-
-function create_large_dataset()
-    dataset = Dataset(groups=3, size=1000, features=200, slot=40)
-    export_dataset("large", dataset)
-end
-
-function create_small_dataset()
-    dataset = Dataset(groups=3, size=100, features=200, slot=40)
-    export_dataset("small", dataset)
-end

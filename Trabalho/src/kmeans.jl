@@ -3,8 +3,8 @@ include("dataset.jl")
 export kmeans, kmeans_approx
 
 "Algoritmo de clusterização K-Means (algoritmo de Lloyd)."
-function kmeans(dataset, k; maxiters=20)
-    inputs = map(v -> float(v[1]), dataset.data)
+function kmeans(input::Input, k::Int; maxiters=20)
+    inputs = map(v -> float(v), input.data)
 
     # inicialização com amostragem sem reposição de k objetos como centros iniciais
     means = map(i -> inputs[i], randperm(length(inputs))[1:k])
@@ -42,9 +42,11 @@ function kmeans(dataset, k; maxiters=20)
     assignments
 end
 
+kmeans(dataset::Dataset, k::Int) = kmeans(dataset.input, k)
+
 "Algoritmo de clusterização K-Means (algoritmo de Lloyd) \
 aproximado para os grupos pré-definidos do dataset."
-function kmeans_approx(dataset, k)
+function kmeans_approx(dataset::Dataset, k::Int)
     assignments = kmeans(dataset, k)
     centermap = mapping(dataset, assignments, k)
     map(c -> centermap[c], assignments)

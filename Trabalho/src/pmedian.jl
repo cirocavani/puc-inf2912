@@ -5,10 +5,9 @@ export pmedian, pmedian_approx
 using JuMP
 
 "Algoritmo de clusterização P-Median (Programan Inteiro, Facility Location Problem)."
-function pmedian(dataset, k)
-    n = dataset.size
-    k = dataset.groups
-    d = dist(dataset)
+function pmedian(input::Input, k::Int)
+    n = input.size
+    d = dist(input.data)
 
     m = Model()
 
@@ -54,9 +53,11 @@ function pmedian(dataset, k)
     assignments
 end
 
+pmedian(dataset::Dataset, k::Int) = pmedian(dataset.input, k)
+
 "Algoritmo de clusterização P-Median (Programan Inteiro, Facility Location Problem) \
 aproximado para os grupos pré-definidos do dataset."
-function pmedian_approx(dataset, k)
+function pmedian_approx(dataset::Dataset, k::Int)
     assignments = pmedian(dataset, k)
     centermap = mapping(dataset, assignments, k)
     map(c -> centermap[c], assignments)

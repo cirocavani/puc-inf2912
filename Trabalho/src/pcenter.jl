@@ -3,8 +3,8 @@ include("dataset.jl")
 export pcenter, pcenter_approx
 
 "Algoritmo de clusterização P-Center (algoritmo Farthest-first traversal)."
-function pcenter(dataset, k)
-    data = map(first, dataset.data)
+function pcenter(input::Input, k::Int)
+    data = input.data
 
     centers = Array(Array{Int64,1}, 0)
     i = rand(1:length(data))
@@ -28,9 +28,11 @@ function pcenter(dataset, k)
     assignments
 end
 
+pcenter(dataset::Dataset, k::Int) = pcenter(dataset.input, k)
+
 "Algoritmo de clusterização P-Center (algoritmo Farthest-first traversal) \
 aproximado para os grupos pré-definidos do dataset."
-function pcenter_approx(dataset, k)
+function pcenter_approx(dataset::Dataset, k::Int)
     assignments = pcenter(dataset, k)
     centermap = mapping(dataset, assignments, k)
     map(c -> centermap[c], assignments)

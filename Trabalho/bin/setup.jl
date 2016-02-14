@@ -1,47 +1,39 @@
+Pkg.update()
+
 # IJulia
-#
-#
-if Pkg.installed("IJulia") === nothing
-    println("Installing IJulia...")
-    Pkg.add("IJulia")
-end
+# https://github.com/JuliaLang/IJulia.jl
+# IJulia is a Julia-language backend combined with the Jupyter interactive environment.
+println("Installing IJulia...")
+Pkg.add("IJulia")
 
 # Gadfly
 # http://gadflyjl.org/
 # Gadfly is a system for plotting and visualization based largely on Hadley Wickhams's ggplot2 for R, and Leland Wilkinson's book The Grammar of Graphics.
-if Pkg.installed("Gadfly") === nothing
-    println("Installing Gadfly...")
-    Pkg.add("Gadfly")
-    Pkg.add("Cairo")
-end
+println("Installing Gadfly...")
+Pkg.add("Gadfly")
+Pkg.add("Cairo")
 
 # JuliaStats MultivariateStats
 # https://github.com/JuliaStats/MultivariateStats.jl
 # http://multivariatestatsjl.readthedocs.org/en/latest/index.html
 # A Julia package for multivariate statistics and data analysis (e.g. dimension reduction)
-if Pkg.installed("MultivariateStats") === nothing
-    println("Installing MultivariateStats...")
-    Pkg.add("MultivariateStats")
-    Pkg.checkout("MultivariateStats")
-end
+println("Installing MultivariateStats...")
+Pkg.add("MultivariateStats")
+Pkg.checkout("MultivariateStats")
 
 # JLD
 # https://github.com/JuliaLang/JLD.jl
 # Saving and loading julia variables while preserving native types
-if Pkg.installed("JLD") === nothing
-    println("Installing JLD...")
-    Pkg.add("JLD")
-end
+println("Installing JLD...")
+Pkg.add("JLD")
 
 # JuMP
 # http://www.juliaopt.org/
 # http://jump.readthedocs.org/en/stable/
 # Modeling language for Mathematical Programming (linear, mixed-integer, conic, nonlinear)
-if Pkg.installed("JuMP") === nothing
-    println("Installing JuMP...")
-    Pkg.add("JuMP")
-    Pkg.add("Cbc")
-end
+println("Installing JuMP...")
+Pkg.add("JuMP")
+Pkg.add("Cbc")
 
 include("../src/clustering.jl")
 const Clustering = Inf2912Clustering

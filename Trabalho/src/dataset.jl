@@ -1,8 +1,10 @@
-export Dataset,
+export Input,
+  Dataset,
   data,
   count,
   summary,
-  dist
+  dist,
+  vector_matrix
 
 "gera a distribuição de objetos para os grupos"
 function group_size(g, n, n_min, n_max)
@@ -67,67 +69,96 @@ function instance_generator(n, c, c_y, p, g, n_min, n_max)
     data
 end
 
-type Dataset
-    groups::Int
-    features::Int
+immutable Input
+    data::Array{Vector{Int}, 1}
+    size::Int
+    dimension::Int
+
+    Input(data::Array{Vector{Int}, 1}) = begin
+        size = length(data)
+        if size == 0
+            error("empty data")
+        end
+        dimension = length(data[1])
+        if dimension == 0
+            error("empty dimension")
+        end
+        for i in data
+            if length(i) != dimension
+                error("wrong dimension: expected $dimension, actual $(length(i))")
+            end
+        end
+
+        new(data, size, dimension)
+    end
+end
+
+immutable Dataset
+    clusters::Int
+    dimension::Int
     slot::Int
     activation_p::Float64
     size::Int
     size_min::Int
     size_max::Int
-    data::Array{Tuple{Array{Int,1}, Int}, 1}
+    input::Input
+    target::Vector{Int}
 
-    Dataset(; groups=3, size=10000, size_min=0, size_max=0, features=200, slot=40, activation_p=0.8) = begin
+    Dataset(; clusters=3, size=1000, size_min=0, size_max=0, dimension=200, slot=40, activation_p=0.8) = begin
         if size < 10
             error("minimum 10")
         end
-        if groups > size
-            error("too many groups")
+        if clusters > size
+            error("too many clusters")
         end
-        if features < groups * slot
+        if dimension < clusters * slot
             error("slot too big")
         end
 
         if size_max == 0
-            size_max = round(Int, 1.2 * size / groups)
+            size_max = round(Int, 1.2 * size / clusters)
         end
         if size_min == 0
             size_min = round(Int, size_max / 2)
         end
-        if size_max * groups < size
+        if size_max * clusters < size
             error("size_max too tight")
         end
 
-        data = instance_generator(size, features, slot, activation_p, groups, size_min, size_max)
+        data = instance_generator(size, dimension, slot, activation_p, clusters, size_min, size_max)
         shuffle!(data)
 
-        new(groups, features, slot, activation_p, size, size_min, size_max, data)
+        input = Input(map(t -> t[1], data))
+        target = map(t -> t[2], data)
+
+        new(clusters, dimension, slot, activation_p, size, size_min, size_max, input, target)
     end
 end
 
-data(ds, k) = filter(t -> t[2] == k, ds.data)
+data(ds, k) = map(i -> ds.input.data[i], findin(ds.target, k))
 count(ds, k) = length(data(ds, k))
 
 "Sumário do Dataset"
 function summary(io::IO, ds::Dataset)
-    println(io, "Number of Groups: ", ds.groups)
-    println(io, "Number of Features: ", ds.features)
-    println(io, "Number of Features (group): ", ds.slot)
+    println(io, "Clusters: ", ds.clusters)
+    println(io, "Dimension (features): ", ds.dimension)
+    println(io, "Features per Cluster: ", ds.slot)
     println(io, "Probability of Activation: ", ds.activation_p)
-    println(io, "Number of Objects (total): ", ds.size)
-    println(io, "Number of Objects per Group (min): ", ds.size_min)
-    println(io, "Number of Objects per Group (max): ", ds.size_max)
-
-    for k=1:ds.groups
-        println(io, "Number of Objects in ", k, ": ", count(ds, k))
+    println(io)
+    println(io, "Size: ", ds.size)
+    println(io, "Min Cluster size: ", ds.size_min)
+    println(io, "Max Cluster size: ", ds.size_max)
+    for k=1:ds.clusters
+        println(io, "Cluster ", k, " size: ", count(ds, k))
     end
 end
 
 "Sumário do Dataset"
 summary(ds::Dataset) = summary(STDOUT, ds)
 
-function dist(dataset)
-    data = map(first, dataset.data)
+vector_matrix(data::Array{Vector{Int}, 1}) = float(hcat(data...))
+
+function dist(data::Array{Vector{Int}, 1})
     n = length(data)
     d = zeros(n, n)
     for i=1:n, j=i+1:n
