@@ -49,8 +49,6 @@ const Clustering = Inf2912Clustering
 println("Creating Datasets...")
 import Clustering.save_large_dataset, Clustering.save_small_dataset
 
-cd("notebook")
-
 println("Large")
 @time Clustering.save_large_dataset()
 println("Small")

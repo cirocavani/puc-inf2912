@@ -10,10 +10,13 @@ export export_dataset,
 
 using Gadfly, JLD
 
-function export_dataset(name, dataset)
-    path = "../dataset/" * name
+const srcdir = dirname(@__FILE__)
+const default_datasetdir = realpath(srcdir * "/../dataset")
+
+function export_dataset(name, dataset; datasetdir=default_datasetdir)
+    path = datasetdir * "/" * name
     isdir(path) && rm(path, recursive=true)
-    mkdir(path)
+    mkpath(path)
     open(path * "/summary.txt", "w") do f
         summary(f, dataset)
     end
@@ -29,8 +32,8 @@ function export_dataset(name, dataset)
     draw(PNG(path * "/plotpca.png", 24cm, 16cm), plotpca(dataset))
 end
 
-function load_dataset(name)
-    path = "../dataset/" * name
+function load_dataset(name; datasetdir=default_datasetdir)
+    path = datasetdir * "/" * name
     load(path * "/dataset.jld", "dataset")
 end
 
